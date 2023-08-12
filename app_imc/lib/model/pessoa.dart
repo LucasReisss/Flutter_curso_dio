@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 
-class Pessoa {
+class IMC {
   String _id = UniqueKey().toString();
-  double _peso = 0.0;
-  double _altura = 0.0;
-  bool _concluido = false;
-  String _time = "";
+  double _peso;
+  double _altura;
+  String _time;
 
-  Pessoa({double peso = 0.0, double altura = 0.0, String time = ""}) : _altura = altura, _peso = peso, _time = time;
+  IMC({double peso = 0.0, double altura = 0.0, String time = ""}) : _altura = altura, _peso = peso, _time = time;
 
   String getId() {
     return _id;
-  }
-
-  void setConcluido(bool concluido) {
-    _concluido = concluido;
   }
 
   double getPeso() {
@@ -33,9 +28,6 @@ class Pessoa {
     _altura = altura;
   }
 
-  bool get concluido{
-    return _concluido;
-  }
 
   String getTime(){
     return _time;

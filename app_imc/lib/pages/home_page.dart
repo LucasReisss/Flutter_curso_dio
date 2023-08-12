@@ -13,23 +13,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController pesoController = TextEditingController(text: "");
   TextEditingController alturaController = TextEditingController(text: "");
-  Pessoa pessoa = Pessoa();
-  var pessoaRepository = PessoaRepository();
-  DateTime? now;
+  IMC imc = IMC();
+  var imcRepository = IMCRepository();
+  DateTime now = DateTime.now();
   String? time;
 
-  var _listaPessoa = <Pessoa>[];
+  var _listaImc = <IMC>[];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    now = DateTime.now();
-    obterPessoas();
+    obterIMCs();
   }
 
-  void obterPessoas() async {
-    _listaPessoa = await pessoaRepository.listarPessoas();
+  void obterIMCs() async {
+    _listaImc = await imcRepository.listarIMCs();
   }
 
   @override
@@ -68,7 +67,7 @@ class _HomePageState extends State<HomePage> {
                       height: 32,
                     ),
                     Text(
-                      pessoa.resultado(
+                      imc.resultado(
                           peso: pesoController.text,
                           altura: alturaController.text),
                       style: const TextStyle(
@@ -84,29 +83,29 @@ class _HomePageState extends State<HomePage> {
                             width: double.infinity,
                             height: 48,
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 try {
-                                  setState(() {
-                                    now = DateTime.now();
-                                    pessoa.calcularIMC();
+                                  now = DateTime.now();
+                                  imc.setPeso(
+                                      double.parse(pesoController.text));
+                                  imc.setAltura(
+                                      double.parse(alturaController.text));
+                                  time = DateFormat('HH:mm').format(now);
+                                  imc.setTime(time!);
 
-                                    pessoa.setPeso(
-                                        double.parse(pesoController.text));
-                                    pessoa.setAltura(
-                                        double.parse(alturaController.text));
-                                    time = DateFormat('HH:mm').format(now!);
-                                    pessoa.setTime(time!);
+                                  await imcRepository.adicionarIMC(IMC(
+                                      peso: imc.getPeso(),
+                                      altura: imc.getAltura(),
+                                      time: imc.getTime()));
 
-                                    pessoaRepository.adicionarPessoa(Pessoa(
-                                        peso: pessoa.getPeso(),
-                                        altura: pessoa.getAltura(),
-                                        time: pessoa.getTime()));
-                                  });
+                                  imc.calcularIMC();
                                 } catch (e) {
                                   debugPrint("$e");
                                 }
 
-                                obterPessoas();
+                                setState(() {
+                                  
+                                });
                               },
                               child: const Text(
                                 "Calcular",
@@ -138,9 +137,9 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.amber,
                           borderRadius: BorderRadius.all(Radius.circular(4))),
                       child: ListView.builder(
-                        itemCount: _listaPessoa.length,
+                        itemCount: _listaImc.length,
                         itemBuilder: (BuildContext context, int index) {
-                          var pessoa = _listaPessoa[index];
+                          var imc = _listaImc[index];
                           return Column(
                             children: [
                               ListView(
@@ -148,10 +147,10 @@ class _HomePageState extends State<HomePage> {
                                 shrinkWrap: true,
                                 children: [
                                   ListTile(
-                                    title: Text(pessoa.calcularIMC()),
+                                    title: Text(imc.calcularIMC()),
                                     subtitle: Text(
-                                        "Peso: ${pessoa.getPeso()}, Altura: ${pessoa.getAltura()}"),
-                                    trailing: Text(" ${pessoa.getTime()}"),
+                                        "Peso: ${imc.getPeso()}, Altura: ${imc.getAltura()}"),
+                                    trailing: Text(" ${imc.getTime()}"),
                                   ),
                                   const Divider(),
                                 ],

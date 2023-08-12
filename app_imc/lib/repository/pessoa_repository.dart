@@ -1,20 +1,15 @@
 import 'package:app_imc/model/pessoa.dart';
 
-class PessoaRepository {
-  List<Pessoa> _pessoas = [];
+class IMCRepository {
+  List<IMC> _imcs = [];
 
-  Future<void> adicionarPessoa(Pessoa pessoa) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    _pessoas.add(pessoa);
+  Future<void> adicionarIMC(IMC imc) async {
+    await Future.delayed(const Duration(milliseconds: 10));
+    _imcs.add(imc);
   }
 
-  void alterar(String id, bool concluido) async{
-    await Future.delayed(const Duration(milliseconds: 200));
-    _pessoas.where((pessoa) => pessoa.getId() == id).first.setConcluido(concluido);
-  }
-
-  Future<List<Pessoa>> listarPessoas() async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    return _pessoas;
+  Future<List<IMC>> listarIMCs() async {
+    await Future.delayed(const Duration(milliseconds: 10));
+    return _imcs;
   }
 }
